@@ -1,2 +1,4 @@
 # bropy
-Basic Heuristic IDS capabilities with Python and Bro
+Basic Anomaly IDS capabilities with Python and Bro
+
+Will populate after Troopers.de
