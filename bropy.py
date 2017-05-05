@@ -7,6 +7,7 @@ from dateutil.parser import parse
 import ConfigParser
 from modules.bropy_logs import *
 from modules.bropy_rules import *
+from modules.bropy_conparse import *
 #Use bropy.cfg to configure file locations
 config = ConfigParser.ConfigParser()
 config.read('./etc/bropy.cfg')
@@ -45,8 +46,17 @@ def autobanner():
 	print "_"*10 + " Advanced "+ "_"*10
 	print "   1 - Create an auto-baseline (Don't do it)\n"
 	print "   2 - Create a rule doc per host for analysis\n"
-	print "   3 - Go Back\n"
+	print "   3 - Generate potential rules from conn logs\n"
+	print "   4 - Main Menu\n"
 	print "_"*30
+def procconn():
+	print "Generating rules list based on conn logs at " + brologdir
+	conresults = raw_input("Enter filename for results: ")
+	confiles = conlist(brologdir)
+	connrules = mkrules(broinstalldir,confiles)
+	writerules(broinstalldir,conresults,connrules,connrules)
+	print "Done. Saved as "+conresults+" in the local directory.\n"
+	exit()
 #create files for each host
 def hostrules():
 	print "Generating host lists..."
@@ -161,11 +171,10 @@ def automenu():
                 elif int(ans) == 2:
                         hostrules()
                 elif int(ans) == 3:
-                        menu()
+                        procconn()
                 elif int(ans) == 4:
-                        print "Goodbye"
-                        exit()
-                else:
+                	menu()
+		else:
                         print "Invalid Selection"
 
 #######################EXECUTION After This ###########################
