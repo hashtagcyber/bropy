@@ -5,6 +5,7 @@ Awesome quality video of me doing a terrible job talking about Bropy... https://
 
 CHANGELOG
 
+
 -Bropy can now generate a list for each host it detects (usefull for handing out to sysadmins to Q/C entries)
 
 -Bropy can now parse conn.logs directly to generate a list of all services. Check out the "advanced" option
@@ -28,4 +29,3 @@ TODO
 -Allow for comments at Y/N time (i.e. "MYSQL port for dbsvr")
 
 -Generate lists using NETFLOW data (this is gonna take some work)
-
