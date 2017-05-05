@@ -1,0 +1,13 @@
+# bropy
+Install Instructions
+
+1. Update ./etc/bropy.cfg variables to match your current install.
+  -You'll probably only need to change the first part of the paths, IE change '/usr/local/bro' in every variable to wherever the root of your bro install is ('/opt/bro' on SecurityOnion, with the exception of log directories, which are at '/nsm/bro/logs')
+2. sudo python bropy.py
+3. Select Install Bropy
+4. Enter the subnet you would like to protect.
+	- This is a comma separated list... examples below:
+		192.168.0.0/24
+		192.168.0.0/24,10.10.0.0/16,172.16.5.1/24
+5. Follow the rest of the prompts.
+6. If you opt not to restart now, YOU MUST RESTART BRO MANUALLY before the scripts will work.
