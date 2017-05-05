@@ -35,23 +35,28 @@ def banner():
 	print "A python wrapper for generating network baselines"
 	print "\n"
 	print "Bropy allows you to:\n"
-	print "   1 - Automatically update your baseline, based on the contents of your Bro notice.log (Not Recommended)\n"
-	print "   2 - Step through alerts in your Bro notice.log and update the baseline by answering questions\n"
-	print "   3 - Add the BaselineReport script to your current bro install\n"
-	print "   4 - Create a list of connections per host\n"
-	print "   5 - Quit\n"
-
+	print "   1 - Step through alerts in your Bro notice.log and update the baseline by answering questions\n"
+	print "   2 - Advanced Options\n"
+	print "   3 - Install Bropy\n"
+	print "   4 - Quit\n"
+def autobanner():
+	print "_" * 30
+	print "Welcome to Bropy!"
+	print "_"*10 + " Advanced "+ "_"*10
+	print "   1 - Create an auto-baseline (Don't do it)\n"
+	print "   2 - Create a rule doc per host for analysis\n"
+	print "   3 - Go Back\n"
+	print "_"*30
 #create files for each host
 def hostrules():
-	print "Option 4 Selected, Generating host lists..."
+	print "Generating host lists..."
 	addbase = readlerts(basedata,brologdir,noticelog)
 	currbase = readrules(basedata)
-	print addbase
 	mkhostrules(addbase,currbase)
-
+	exit()
 #Read alerts, add to baseline, automagically
 def autoupdate():
-	print " Option 1 selected, Auto Baseline In Progress"
+	print "Auto Update selected, Auto Baseline In Progress"
 	currbase = readrules(basedata)
 	addbase = readlerts(basedata,brologdir,noticelog)
 	writerules(broinstalldir,basedata,addbase,currbase)
@@ -129,14 +134,12 @@ def menu():
 		if not ans.isdigit():
 			print "Invalid Choice"
 		elif int(ans) == 1:
-			autoupdate()
-		elif int(ans) == 2:
 			stepupdate()
+		elif int(ans) == 2:
+			automenu()
 		elif int(ans) == 3:
 			betainst()
 		elif int(ans) == 4:
-			hostrules()	
-		elif int(ans) == 5:
 			print "Goodbye"
 			exit()
 		elif int(ans) == 5:
@@ -146,6 +149,24 @@ def menu():
 			exit()
 		else:
 			print "Invalid Selection"
+
+def automenu():
+        while loop:
+                autobanner()
+                ans = raw_input("Choose one : [1-3]")
+                if not ans.isdigit():
+                        print "Invalid Choice"
+                elif int(ans) == 1:
+                        autoupdate()
+                elif int(ans) == 2:
+                        hostrules()
+                elif int(ans) == 3:
+                        menu()
+                elif int(ans) == 4:
+                        print "Goodbye"
+                        exit()
+                else:
+                        print "Invalid Selection"
 
 #######################EXECUTION After This ###########################
 menu()
