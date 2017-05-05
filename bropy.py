@@ -95,8 +95,8 @@ def betainst():
 	print 'You entered ' + mynet + '. If this is incorrect, manually edit the file located at ' + basescr
 	doit = "sed -i '/global protected/cglobal protected: set[subnet] = {" + mynet + "};' ./etc/baselinereport.bro"
 	os.system(doit)
-	doit = "sed -i 's/\/opt\/bro/"+broinstalldir.replace('/','\/')+"/g' "+"./etc/baselinereport.bro"
-	os.system(doit)
+#	doit = "sed -i 's/\/opt\/bro/"+broinstalldir.replace('/','\/')+"/g' "+"./etc/baselinereport.bro"
+#	os.system(doit)
 	if 'baselinereport.bro' in open(broconfig).read():
 		print "Script is already mentioned in "+broinstalldir+"/share/bro/site/local.bro ... Skipping"
 	else:

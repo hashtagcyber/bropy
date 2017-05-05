@@ -8,8 +8,6 @@
 #Shoutout to @Killswitch_GUI for convincing my to start speaking, and @Chirontech for supporting me.
 #
 #TODO: Check destination if ipsrc in protectedhosts
-#Load the notice module... should probably be a relative path
-@load /usr/local/bro/share/bro/base/frameworks/notice
 #Create a new notice type for our script
 export {
 	redef enum Notice::Type += {
