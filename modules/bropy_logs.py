@@ -9,6 +9,7 @@ def loglist(basedata,brologdir):
         print "These will be parsed:\n"
         for x in logfiles:
                 print x
+	print "*" * 40
         return logfiles
 
 def readlerts(basedata,brologdir,noticelog):
@@ -49,6 +50,9 @@ def readlerts(basedata,brologdir,noticelog):
 					else:
 						addbase[key] = val
 		print str(noticelog) + " has been processed"
+		print "Finished processing logs."
+		print "*" * 40
 	except:
-		print "Error processing file: " + str(noticelog)
+		print "Finished processing logs."
+		print "*" * 40
 	return addbase

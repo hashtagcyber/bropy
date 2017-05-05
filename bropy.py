@@ -9,7 +9,7 @@ from modules.bropy_logs import *
 from modules.bropy_rules import *
 #Use bropy.cfg to configure file locations
 config = ConfigParser.ConfigParser()
-config.read('bropy.cfg')
+config.read('./etc/bropy.cfg')
 broinstalldir = config.get('DEFAULT','broinstalldir')
 basedata = config.get('DEFAULT','basedata')
 basescr = config.get('DEFAULT','basescr')
@@ -38,7 +38,16 @@ def banner():
 	print "   1 - Automatically update your baseline, based on the contents of your Bro notice.log (Not Recommended)\n"
 	print "   2 - Step through alerts in your Bro notice.log and update the baseline by answering questions\n"
 	print "   3 - Add the BaselineReport script to your current bro install\n"
-	print "   4 - Quit\n"
+	print "   4 - Create a list of connections per host\n"
+	print "   5 - Quit\n"
+
+#create files for each host
+def hostrules():
+	print "Option 4 Selected, Generating host lists..."
+	addbase = readlerts(basedata,brologdir,noticelog)
+	currbase = readrules(basedata)
+	print addbase
+	mkhostrules(addbase,currbase)
 
 #Read alerts, add to baseline, automagically
 def autoupdate():
@@ -59,7 +68,7 @@ def stepupdate():
 		loop = True
 		while loop:
 			print "Should {} be allowed to connect to {} ?".format(addbase[x], x)
-		 	ans = raw_input("y/n?")
+			ans = raw_input("y/n?")
 			if ans not in ['y','n']:
 				print 'Try again'
 			elif ans == 'y':
@@ -79,9 +88,9 @@ def stepupdate():
 def betainst():
 	mynet = raw_input('What subnets would you like to protect?(Enter comma separated list of subnets w/CIDR)\ni.e. 192.168.24.0/24,10.10.10.0/24\n')
 	print 'You entered ' + mynet + '. If this is incorrect, manually edit the file located at ' + basescr
-	doit = "sed -i '/global protected/cglobal protected: set[subnet] = {" + mynet + "};' baselinereport.bro"
+	doit = "sed -i '/global protected/cglobal protected: set[subnet] = {" + mynet + "};' ./etc/baselinereport.bro"
 	os.system(doit)
-	doit = "sed -i 's/\/opt\/bro/"+broinstalldir.replace('/','\/')+"/g' "+basescr
+	doit = "sed -i 's/\/opt\/bro/"+broinstalldir.replace('/','\/')+"/g' "+"./etc/baselinereport.bro"
 	os.system(doit)
 	if 'baselinereport.bro' in open(broconfig).read():
 		print "Script is already mentioned in "+broinstalldir+"/share/bro/site/local.bro ... Skipping"
@@ -92,21 +101,21 @@ def betainst():
 	if os.path.exists(basedata):
 		if qry_yn('Baseline Data already exists, Overwrite?'):
 			print "Overwriting with sample baseline data file at " + basedata
-			copyfile('baseline.data',basedata)
+			copyfile('./etc/baseline.data',basedata)
 		else:
 			print "Skipping..."
 	else:
 		print "Copying sample baseline data file to " + basedata
-		copyfile('baseline.data',basedata)
+		copyfile('./etc/baseline.data',basedata)
 	if os.path.exists(basescr):
 		if qry_yn('Baseline script found...Overwrite?'):
 			print "Overwriting script at " + basescr
-			copyfile('baselinereport.bro',basescr)
+			copyfile('./etc/baselinereport.bro',basescr)
 		else:
 			print "Skipping..."
 	else:
 		print "Copying Baseline report script to " + basescr
-		copyfile('baselinereport.bro',basescr)
+		copyfile('./etc/baselinereport.bro',basescr)
 	if qry_yn('Bro must be restarted to complete installation. Restart Bro now?'):
 		os.system(broinstalldir+'/bin/broctl restart')
 		print "Install complete."
@@ -126,6 +135,8 @@ def menu():
 		elif int(ans) == 3:
 			betainst()
 		elif int(ans) == 4:
+			hostrules()	
+		elif int(ans) == 5:
 			print "Goodbye"
 			exit()
 		elif int(ans) == 5:
