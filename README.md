@@ -29,3 +29,5 @@ TODO
 -Allow for comments at Y/N time (i.e. "MYSQL port for dbsvr")
 
 -Generate lists using NETFLOW data (this is gonna take some work)
+
+- IPv6 to make my Troopers friends happy! (Ok, well, me too, IPv6 support would be awesome)
