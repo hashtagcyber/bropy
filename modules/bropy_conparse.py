@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-
+import datetime
 def conlist(brologdir):
 	#Create a list of all conn logs in bro log directory
 	logfiles = os.popen('find '+brologdir+' -name conn.* -type f').read().rstrip('\n').split('\n')
@@ -42,4 +42,20 @@ def mkrules(broinstalldir,logfiles):
 		print "Finished processing: " + conlog
 
 	return results
+
+def writeconrules(conresults,connrules):
+	dstlst = sorted(connrules.keys())
+	with open(conresults,'w') as myfile:
+		myfile.write('#fields\tdestip\tdestport\tpro\tips\tcomment\tremotemeth\tsvchash\n')
+		myfile.write('#Rules Generated via conn logs. These must be moved to baseline.data')
+		myfile.write(' and Bro must be restarted to take effect\n')
+                for x in dstlst:
+                        mylst= x.replace("'","").replace(",","").split()
+                        myline = '\t'.join(map(str,mylst)) + '\t'
+                        myline += '\t'.join(map(str,connrules[x].split())) +'\n'
+                        myfile.write(myline)
+                myfile.write('#End Bropy RuleBlock\n')
+                myfile.write('#Lastrun\t' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+ "\n")
+		myfile.close()
+		return
 

@@ -3,11 +3,14 @@ from shutil import copyfile
 import os
 import datetime
 from dateutil.parser import parse
-
 import ConfigParser
+
 from modules.bropy_logs import *
 from modules.bropy_rules import *
 from modules.bropy_conparse import *
+from modules.bropy_menus import *
+from modules.bropy_install import *
+
 #Use bropy.cfg to configure file locations
 config = ConfigParser.ConfigParser()
 config.read('./etc/bropy.cfg')
@@ -27,34 +30,12 @@ loop = True
 #TODO allow for comments
 #TODO extend checks for protected hosts src > unk destination
 
-
-
-#Banner stuff
-def banner():
-	print "_" * 30
-	print "Welcome to Bropy!"
-	print "A python wrapper for generating network baselines"
-	print "\n"
-	print "Bropy allows you to:\n"
-	print "   1 - Step through alerts in your Bro notice.log and update the baseline by answering questions\n"
-	print "   2 - Advanced Options\n"
-	print "   3 - Install Bropy\n"
-	print "   4 - Quit\n"
-def autobanner():
-	print "_" * 30
-	print "Welcome to Bropy!"
-	print "_"*10 + " Advanced "+ "_"*10
-	print "   1 - Create an auto-baseline (Don't do it)\n"
-	print "   2 - Create a rule doc per host for analysis\n"
-	print "   3 - Generate potential rules from conn logs\n"
-	print "   4 - Main Menu\n"
-	print "_"*30
 def procconn():
 	print "Generating rules list based on conn logs at " + brologdir
 	conresults = raw_input("Enter filename for results: ")
 	confiles = conlist(brologdir)
 	connrules = mkrules(broinstalldir,confiles)
-	writerules(broinstalldir,conresults,connrules,connrules)
+	writeconrules(conresults,connrules)
 	print "Done. Saved as "+conresults+" in the local directory.\n"
 	exit()
 #create files for each host
@@ -101,8 +82,10 @@ def stepupdate():
 
 #install my script
 def betainst():
-	mynet = raw_input('What subnets would you like to protect?(Enter comma separated list of subnets w/CIDR)\ni.e. 192.168.24.0/24,10.10.10.0/24\n')
-	print 'You entered ' + mynet + '. If this is incorrect, manually edit the file located at ' + basescr
+	mynet = getprotectsubnet()
+	while not checksubnet(mynet,basescr):
+		print "Sorry, invalid subnet"
+		mynet = getprotectsubnet()
 	doit = "sed -i '/global protected/cglobal protected: set[subnet] = {" + mynet + "};' ./etc/baselinereport.bro"
 	os.system(doit)
 #	doit = "sed -i 's/\/opt\/bro/"+broinstalldir.replace('/','\/')+"/g' "+"./etc/baselinereport.bro"
