@@ -27,7 +27,7 @@ type Val: record {
 };
 #Define the table, hosts, to index on an ip address and port pair
 global hosts: table[addr,port] of Val = table();
-global protected: set[subnet] = {156.22.10.0/24};
+global protected: set[subnet] = {1.2.3.4/24};
 
 #load the table from file "baseline.data" and send the data to the table defined above
 event bro_init()
