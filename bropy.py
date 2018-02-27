@@ -82,11 +82,11 @@ def stepupdate():
 
 #install my script
 def betainst():
-	mynet = getprotectsubnet()
-	while not checksubnet(mynet,basescr):
+	mynet = getprotectsubnet().split(',')
+	while not checkprotectedinput(mynet,basescr):
 		print "Sorry, invalid subnet"
 		mynet = getprotectsubnet()
-	doit = "sed -i '/global protected/cglobal protected: set[subnet] = {" + mynet + "};' ./etc/baselinereport.bro"
+	doit = "sed -i '/global protected/cglobal protected: set[subnet] = {" + ','.join(mynet) + "};' ./etc/baselinereport.bro"
 	os.system(doit)
 #	doit = "sed -i 's/\/opt\/bro/"+broinstalldir.replace('/','\/')+"/g' "+"./etc/baselinereport.bro"
 #	os.system(doit)
